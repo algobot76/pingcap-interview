@@ -77,8 +77,3 @@ def get_random_query() -> str:
         q = f"{q} {get_random_limit_clause()}"
 
     return f"{q};"
-
-
-if __name__ == "__main__":
-    q = get_random_query()
-    print(q)
