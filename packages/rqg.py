@@ -70,8 +70,8 @@ def get_random_query() -> str:
     arithmetic_exprs = [
         f"{expr[0]}{expr[1]}{expr[2]}" for expr in arithmetic_exprs]
     columns.extend(arithmetic_exprs)
-
-    q = f"SELECT {','.join(columns)} FROM t"
+    output_columns = choose_random_columns(columns)
+    q = f"SELECT {','.join(output_columns)} FROM t"
 
     # Generate a WHERE clause?
     if get_random_bool():
