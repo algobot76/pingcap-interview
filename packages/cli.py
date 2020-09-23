@@ -15,6 +15,10 @@ def fuzz():
                         help='number of random SQL quries')
     args = parser.parse_args()
 
+    if not Path(args.path).is_file():
+        print(f"The path \"{args.path}\" is not a file.")
+        return
+
     conn = sqlite3.connect(args.path)
     for _ in range(args.num):
         cursor = conn.cursor()
