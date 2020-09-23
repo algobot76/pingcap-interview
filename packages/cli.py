@@ -22,6 +22,7 @@ def main():
         end_time = time.time_ns()
         print(f"Number of entries: {len(cursor.fetchall())}")
         print(f"Execution time(ns): {end_time - start_time}")
+        print("----------")
     conn.close()
 
 
