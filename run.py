@@ -6,6 +6,7 @@ from typing import List, Tuple
 
 MAX_C_LENGTH = 10
 COLUMNS = ["a", "b", "c"]
+ARITHMETIC_OPERATORS = ["+", "-", "*", "/"]
 COMPARISON_OPERATORS = ["<", ">", "="]
 LOGICAL_OPERATORS = ["AND", "OR"]
 
@@ -23,6 +24,11 @@ def get_random_columns() -> List[str]:
     random.shuffle(columns)
     return columns[0:random.randint(1, len(columns))]
 
+
+def get_random_arithmetic_expr() -> Tuple[str, str, str]:
+    left = random.choice(["a", "b"])
+    right = "b" if left == "a" else "a"
+    return (left, random.choice(ARITHMETIC_OPERATORS), right)
 
 def get_random_condition(column: str) -> Tuple[str, str, str]:
     if column == "c":
@@ -50,7 +56,13 @@ def get_random_limit_clause(k: int = 10) -> str:
 
 
 def get_random_query() -> str:
-    q = f"SELECT {','.join(get_random_columns())} FROM t"
+    columns = get_random_columns()
+    arithmetic_exprs = [get_random_arithmetic_expr() for _ in range(random.randint(0, 2))]
+    arithmetic_exprs = [f"{expr[0]}{expr[1]}{expr[2]}" for expr in arithmetic_exprs]
+    columns.extend(arithmetic_exprs)
+    columns = ','.join(columns)
+
+    q = f"SELECT {columns} FROM t"
 
     # Generate a WHERE clause?
     if get_random_bool():
