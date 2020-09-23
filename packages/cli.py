@@ -4,7 +4,7 @@ import time
 from packages.rqg import get_random_query
 
 
-def main():
+def fuzz():
     parser = argparse.ArgumentParser(
         description="A Command Line Tool for Fuzz Testing")
     parser.add_argument("path", metavar='path', type=str, help="database path")
@@ -24,7 +24,3 @@ def main():
         print(f"Execution time(ns): {end_time - start_time}")
         print("----------")
     conn.close()
-
-
-if __name__ == '__main__':
-    main()
