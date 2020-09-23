@@ -1,6 +1,6 @@
 import copy
 import random
-import string
+from packages.utils import get_random_string
 from typing import List, Tuple
 
 
@@ -13,10 +13,6 @@ LOGICAL_OPERATORS = ["AND", "OR"]
 
 def get_random_bool() -> bool:
     return random.choice([True, False])
-
-
-def get_random_string(k: int = 1) -> str:
-    return ''.join([random.choice(string.ascii_letters) for _ in range(k)])
 
 
 def get_random_columns() -> List[str]:
