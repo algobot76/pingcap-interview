@@ -70,8 +70,21 @@ def get_random_query() -> str:
     arithmetic_exprs = [
         f"{expr[0]}{expr[1]}{expr[2]}" for expr in arithmetic_exprs]
     columns.extend(arithmetic_exprs)
+    columns = [f"\"{column}\"" for column in columns]
+
+    # Has nested query?
+    if get_random_bool():
+        inner_q, new_columns = _get_random_query(columns, "t")
+        q, _ = _get_random_query(new_columns, inner_q)
+    else:
+        q, _ = _get_random_query(columns, "t")
+
+    return f"{q};"
+
+
+def _get_random_query(columns: List[str], table: str,) -> str:
     output_columns = choose_random_columns(columns)
-    q = f"SELECT {','.join(output_columns)} FROM t"
+    q = f"SELECT {','.join(output_columns)} FROM ({table})"
 
     # Generate a WHERE clause?
     if get_random_bool():
@@ -85,4 +98,4 @@ def get_random_query() -> str:
     if get_random_bool():
         q = f"{q} {get_random_limit_clause()}"
 
-    return f"{q};"
+    return q, output_columns
