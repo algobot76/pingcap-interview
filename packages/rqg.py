@@ -30,6 +30,13 @@ def get_random_arithmetic_expr() -> Tuple[str, str, str]:
     right = "b" if left == "a" else "a"
     return (left, random.choice(ARITHMETIC_OPERATORS), right)
 
+
+def choose_random_columns(columns: List[str]) -> List[str]:
+    temp = copy.deepcopy(columns)
+    random.shuffle(temp)
+    return temp[0:random.randint(1, len(temp))]
+
+
 def get_random_condition(column: str) -> Tuple[str, str, str]:
     if column == "c":
         return (column, "=", f"\'{get_random_string(random.randint(1, MAX_C_LENGTH))}\'")
@@ -39,16 +46,17 @@ def get_random_condition(column: str) -> Tuple[str, str, str]:
         return (column, operator, str(value))
 
 
-def get_random_where_clause() -> str:
-    columns = get_random_columns()
-    conditions = [get_random_condition(column) for column in columns]
+def get_random_where_clause(columns: List[str]) -> str:
+    random_columns = choose_random_columns(columns)
+    conditions = [get_random_condition(column) for column in random_columns]
     conditions = [
         f"{condition[0]} {condition[1]} {condition[2]}" for condition in conditions]
     return "WHERE " + f" {random.choice(LOGICAL_OPERATORS)} ".join(conditions)
 
 
-def get_random_order_by_clause() -> str:
-    return f"ORDER BY {','.join(get_random_columns())}"
+def get_random_order_by_clause(columns: List[str]) -> str:
+    random_columns = choose_random_columns(columns)
+    return f"ORDER BY {','.join(random_columns)}"
 
 
 def get_random_limit_clause(k: int = 10) -> str:
@@ -57,20 +65,21 @@ def get_random_limit_clause(k: int = 10) -> str:
 
 def get_random_query() -> str:
     columns = get_random_columns()
-    arithmetic_exprs = [get_random_arithmetic_expr() for _ in range(random.randint(0, 2))]
-    arithmetic_exprs = [f"{expr[0]}{expr[1]}{expr[2]}" for expr in arithmetic_exprs]
+    arithmetic_exprs = [get_random_arithmetic_expr()
+                        for _ in range(random.randint(0, 2))]
+    arithmetic_exprs = [
+        f"{expr[0]}{expr[1]}{expr[2]}" for expr in arithmetic_exprs]
     columns.extend(arithmetic_exprs)
-    columns = ','.join(columns)
 
-    q = f"SELECT {columns} FROM t"
+    q = f"SELECT {','.join(columns)} FROM t"
 
     # Generate a WHERE clause?
     if get_random_bool():
-        q = f"{q} {get_random_where_clause()}"
+        q = f"{q} {get_random_where_clause(columns)}"
 
     # Generate a random ORDER BY clause?
     if get_random_bool():
-        q = f"{q} {get_random_order_by_clause()}"
+        q = f"{q} {get_random_order_by_clause(columns)}"
 
     # Generate a random LIMIT clause?
     if get_random_bool():
