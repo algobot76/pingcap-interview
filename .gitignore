@@ -139,3 +139,6 @@ dmypy.json
 
 ### Visual Studio Code ###
 .code/
+
+### SQLite ###
+example.db
